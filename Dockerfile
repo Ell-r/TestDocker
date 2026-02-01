@@ -1,18 +1,18 @@
 # Stage 1: Build stage
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
 # Копіюємо проект і відновлюємо залежності
-COPY ["WebApiPizushi/WebApiPizushi.csproj", "WebApiPizushi/"]
-RUN dotnet restore "WebApiPizushi/WebApiPizushi.csproj"
+COPY ["OneMVCProject/OneMVCProject.csproj", "OneMVCProject/"]
+RUN dotnet restore "OneMVCProject/OneMVCProject.csproj"
 
 # Копіюємо всі файли і будуємо додаток
 COPY . .
-WORKDIR /source/WebApiPizushi
+WORKDIR /source/OneMVCProject
 RUN dotnet publish -c Release -o /app
 
 # Stage 2: Final image for runtime
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
 WORKDIR /app
 
@@ -20,4 +20,4 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Запускаємо додаток
-ENTRYPOINT ["dotnet", "WebApiPizushi.dll"]
+ENTRYPOINT ["dotnet", "OneMVCProject.dll"]
